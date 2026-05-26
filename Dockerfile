@@ -1,22 +1,19 @@
 FROM php:8.2-cli
 
-RUN apt-get update && apt-get install -y \
-    unzip \
-    git \
-    curl \
-    sqlite3 \
-    libsqlite3-dev \
-    && docker-php-ext-install pdo pdo_sqlite
-
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
 WORKDIR /app
 
 COPY . .
 
-RUN composer install --no-dev --optimize-autoloader
+RUN apt-get update && apt-get install -y \
+    unzip \
+    git \
+    libsqlite3-dev \
+    sqlite3 \
+    && docker-php-ext-install pdo pdo_sqlite
 
-RUN touch database/database.sqlite
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+RUN composer install
 
 EXPOSE 10000
 
