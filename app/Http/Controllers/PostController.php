@@ -49,4 +49,15 @@ class PostController extends Controller
         $post->delete();
         return response()->json(['message'=>'Eliminado']);
     }
+
+    
+    public function userPosts($userId)
+    {
+        $posts = Post::where('user_id', $userId)
+                 ->with(['user', 'likes', 'comments'])
+                 ->latest()
+                 ->paginate(10);
+
+        return response()->json($posts);
+    }
 }

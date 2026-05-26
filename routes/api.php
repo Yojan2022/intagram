@@ -8,6 +8,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\FriendshipController;
+use App\Http\Controllers\MessageController;
 
 //Route::get('/user', function (Request $request) {
 //    return $request->user();
@@ -17,6 +18,8 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login',    [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
+
+    Route::get('/users/search/{name}', [AuthController::class, 'searchUsers']);
 
     Route::get('/me', [AuthController::class, 'me']);
 
@@ -39,6 +42,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/friends', [FriendshipController::class, 'myFriends']);
     Route::post('/friendships/{friendship}/accept', [FriendshipController::class, 'accept']);
     Route::get('/friendships/pending', [FriendshipController::class, 'pending']);
+
+    Route::get('/users/{user}/posts', [PostController::class, 'userPosts'])->middleware('auth:sanctum');
+
+    // mensajes
+    Route::get('/messages/{user}', [MessageController::class, 'index']);
+    Route::post('/messages/{user}', [MessageController::class, 'store']);
 });
 
 Route::middleware('auth:sanctum')->post('/logout', function (\Illuminate\Http\Request $request) {

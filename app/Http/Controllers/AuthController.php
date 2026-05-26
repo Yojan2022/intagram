@@ -65,4 +65,13 @@ class AuthController extends Controller
     {
         return $request->user()->load('profile');
     }
+
+    public function searchUsers($name)
+    {
+    $users = \App\Models\User::with('profile')
+        ->where('name', 'like', "%$name%")
+        ->get();
+
+    return response()->json($users);
+    }
 }

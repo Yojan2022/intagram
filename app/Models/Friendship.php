@@ -14,6 +14,11 @@ class Friendship extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function friend()
+    {
+    return $this->belongsTo(User::class, 'friend_id');
+    }
+
     public function friends()
     {
         return $this->belongsToMany(User::class, 'friendships', 'user_id', 'friend_id')

@@ -37,9 +37,29 @@ class FriendshipController extends Controller
     }
 
     public function myFriends(Request $request)
-    {
-        return $request->user()->friends;
-    }
+{
+    $userId = $request->user()->id;
+
+    $friendships = Friendship::with(['user.profile', 'friend.profile'])
+        ->where(function($q) use ($userId) {
+
+            $q->where('user_id', $userId)
+              ->orWhere('friend_id', $userId);
+
+        })
+        ->where('status', 'accepted')
+        ->get();
+
+    $friends = $friendships->map(function($f) use ($userId) {
+
+        return $f->user_id == $userId
+            ? $f->friend
+            : $f->user;
+
+    });
+
+    return response()->json($friends->values());
+}
 
     public function pending(Request $request)
     {
