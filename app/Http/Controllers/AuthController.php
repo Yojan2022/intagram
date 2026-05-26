@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Log;
 class AuthController extends Controller
 {
     public function register(Request $request)
-    {
+    {dd($request->all());
         $data = $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
